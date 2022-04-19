@@ -90,6 +90,7 @@ public final class SpringFactoriesLoader {
 	 * @see #loadFactoryNames
 	 */
 	public static <T> List<T> loadFactories(Class<T> factoryType, @Nullable ClassLoader classLoader) {
+		System.out.println("调用了SpringFactoriesLoader :: loadFactories");
 		Assert.notNull(factoryType, "'factoryType' must not be null");
 		ClassLoader classLoaderToUse = classLoader;
 		if (classLoaderToUse == null) {
@@ -118,11 +119,13 @@ public final class SpringFactoriesLoader {
 	 * @see #loadFactories
 	 */
 	public static List<String> loadFactoryNames(Class<?> factoryType, @Nullable ClassLoader classLoader) {
+		System.out.println("调用了SpringFactoriesLoader :: loadFactoryNames");
 		String factoryTypeName = factoryType.getName();
 		return loadSpringFactories(classLoader).getOrDefault(factoryTypeName, Collections.emptyList());
 	}
 
 	private static Map<String, List<String>> loadSpringFactories(@Nullable ClassLoader classLoader) {
+		System.out.println("调用了SpringFactoriesLoader :: loadSpringFactories");
 		MultiValueMap<String, String> result = cache.get(classLoader);
 		if (result != null) {
 			return result;
@@ -155,6 +158,7 @@ public final class SpringFactoriesLoader {
 
 	@SuppressWarnings("unchecked")
 	private static <T> T instantiateFactory(String factoryImplementationName, Class<T> factoryType, ClassLoader classLoader) {
+		System.out.println("调用了SpringFactoriesLoader :: instantiateFactory");
 		try {
 			Class<?> factoryImplementationClass = ClassUtils.forName(factoryImplementationName, classLoader);
 			if (!factoryType.isAssignableFrom(factoryImplementationClass)) {

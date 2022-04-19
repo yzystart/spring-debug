@@ -516,33 +516,33 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
-			// ׼��ˢ��
+			// 准备刷新
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
-			// ����õ��ľ���һ��DefaultListableBeanFactory
+			// 得到beanFactory 这里拿到的是DefaultListableBeanFactory
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
-			// ��beanFactory����һЩ����
+			// 准备beanFactory：给beanFactory做一些配置，并注册一些环境bean
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
-				// ����һ�����󷽷���������ȥʵ��
+				// 这是一个抽象方法，交由子类实现，可以对beanFactory做一些额外的处理
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context. �ⲽ������Ҫ
 				// Invoke factory processors registered as beans in the context.
-				// ִ�� BeanFactoryPostProcessor
-				//�����������Ҫ ���� PostProcessorRegistrationDelegate::invokeBeanFactoryPostProcessors();
-				// ��������@Configurationע�������ɨ�裬����Ҫע���bean��ת����beandefition���beandefitionMap
-				// ͨ��ConfigruationCLassPostProcessor::postProcessBeanDefinitionRegistry ʵ��@Configruation��ɨ��
-				// ͨ��ConfigruationCLassPostProcessor::postProcessBeanFactory ��ǿConfigruation���@Bean����
+				// 执行 BeanFactoryPostProcessor
+				// 这个方法很重要 调用 PostProcessorRegistrationDelegate::invokeBeanFactoryPostProcessors();
+				// 在这里会对@Configuration注解的类做扫描，把需要注册的bean都转化成beandefition存进beandefitionMap
+				// 通过ConfigruationCLassPostProcessor::postProcessBeanDefinitionRegistry 实现@Configruation的扫描
+				// 通过ConfigruationCLassPostProcessor::postProcessBeanFactory 增强Configruation类的@Bean方法
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
-				// ע������ beanPostProcessor bean���ô�����
+				// 注册所有beanPostProcessor  META-INF/spring.factories下 以及自定义的 beanPostProcessor
 				registerBeanPostProcessors(beanFactory);
 
 				// �����ǳ�ʼ�����ʻ����������new��һ��DelegatingMessageSource ע�ᵽbeanFactory
