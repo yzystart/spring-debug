@@ -337,6 +337,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 	public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) {
 		InjectionMetadata metadata = findResourceMetadata(beanName, bean.getClass(), pvs);
 		try {
+			// 得到所有属性后注入。
 			metadata.inject(bean, beanName, pvs);
 		}
 		catch (Throwable ex) {
@@ -503,6 +504,8 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 	}
 
 	/**
+	 * 注入得到bean
+	 * <br>
 	 * Obtain the resource object for the given name and type.
 	 * @param element the descriptor for the annotated field/method
 	 * @param requestingBeanName the name of the requesting bean
@@ -522,7 +525,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 			throw new NoSuchBeanDefinitionException(element.lookupType,
 					"No resource factory configured - specify the 'resourceFactory' property");
 		}
-		return autowireResource(this.resourceFactory, element, requestingBeanName);
+		return autowireResource(this.resourceFactory, element, requestingBeanName);//自动装配逻辑
 	}
 
 	/**
@@ -557,6 +560,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 			}
 		}
 		else {
+			// 创建需要的对象
 			resource = factory.getBean(name, element.lookupType);
 			autowiredBeanNames = Collections.singleton(name);
 		}
@@ -659,6 +663,12 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 			this.lazyLookup = (lazy != null && lazy.value());
 		}
 
+		/**
+		 * 得到需要注入的类的对象
+		 * @param target
+		 * @param requestingBeanName
+		 * @return
+		 */
 		@Override
 		protected Object getResourceToInject(Object target, @Nullable String requestingBeanName) {
 			return (this.lazyLookup ? buildLazyResourceProxy(this, requestingBeanName) :

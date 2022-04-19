@@ -504,7 +504,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
-			// 这里会调用 BeanPostProcessors 看是否创建代理，如果创建了直接返回
+			// 在bean开始实例化前 有一个通过beanPostProcessor创建代理的机会，如果创建了代理就直接返回。
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -516,6 +516,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
+			// 上面没有创建代理对象，才会走到这里，开始创建bean
 			// 创建bean的方法 doCreateBean()
 			Object beanInstance = doCreateBean(beanName, mbdToUse, args);
 			if (logger.isTraceEnabled()) {
@@ -589,13 +590,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				logger.trace("Eagerly caching bean '" + beanName +
 						"' to allow for resolving potential circular references");
 			}
-			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean)); // 加进单例工厂列表，还没有加进单例池
+			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean)); // 把这个方法加进三级缓存
 		}
 
 		// Initialize the bean instance.
 		Object exposedObject = bean;
 		try {
-			// 终于到了属性注入
+			// 终于到了属性注入 核心就是调用postProcessPropertyValues去注入
 			populateBean(beanName, mbd, instanceWrapper);
 			// 在整个bean注入完后，可以说这个bean该处理的都已经处理完了，接下来调用实现的接口
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
@@ -967,6 +968,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof SmartInstantiationAwareBeanPostProcessor) {
+					// 如果有需要。会在这一步创建代理对象
 					SmartInstantiationAwareBeanPostProcessor ibp = (SmartInstantiationAwareBeanPostProcessor) bp;
 					exposedObject = ibp.getEarlyBeanReference(exposedObject, beanName);
 				}
@@ -1103,6 +1105,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
+	 * 在bean开始实例化前 有一个通过beanPostProcessor创建代理的机会，如果通过 后置处理器的postProcessBeforeInstantiation返回了Object，
+	 * 就直接返回这个对象
+	 * <br>
 	 * Apply before-instantiation post-processors, resolving whether there is a
 	 * before-instantiation shortcut for the specified bean.
 	 * @param beanName the name of the bean

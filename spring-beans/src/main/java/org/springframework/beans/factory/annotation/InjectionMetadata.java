@@ -118,6 +118,14 @@ public class InjectionMetadata {
 		this.checkedElements = checkedElements;
 	}
 
+
+	/**
+	 *  处理 @Resource 注入
+	 * @param target
+	 * @param beanName
+	 * @param pvs
+	 * @throws Throwable
+	 */
 	public void inject(Object target, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
 		Collection<InjectedElement> checkedElements = this.checkedElements;
 		Collection<InjectedElement> elementsToIterate =
@@ -228,14 +236,16 @@ public class InjectionMetadata {
 		}
 
 		/**
+		 * 这里就是依赖注入的方法了
+		 * <br>
 		 * Either this or {@link #getResourceToInject} needs to be overridden.
 		 */
 		protected void inject(Object target, @Nullable String requestingBeanName, @Nullable PropertyValues pvs)
 				throws Throwable {
 
-			if (this.isField) {
+			if (this.isField) { //如果是属性
 				Field field = (Field) this.member;
-				ReflectionUtils.makeAccessible(field);
+				ReflectionUtils.makeAccessible(field); //将属性设置为可以访问
 				field.set(target, getResourceToInject(target, requestingBeanName));
 			}
 			else {

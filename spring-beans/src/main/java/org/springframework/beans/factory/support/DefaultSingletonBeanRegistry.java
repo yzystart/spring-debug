@@ -82,7 +82,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
-	/** Cache of early singleton objects: bean name to bean instance.早期创建暴露出来的bean，这里的bean还没创建完成，只是先暴露出来 <br>【三级缓存】 */
+	/** Cache of early singleton objects: bean name to bean instance.早期创建暴露出来的bean，这里的bean还没创建完成，只是先暴露出来 <br>【二级缓存】 */
 	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
 
 	/** Set of registered singletons, containing the bean names in registration order. */
@@ -171,6 +171,14 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
+	 *
+	 * <br>
+	 * 大致逻辑：
+	 * 先从一级缓存也就是创建完成的bean里面取，如果一级缓存里面没有：并且这个bean在创建中：去三级缓存里取出这个bean的创建方法，调用创建后从三级缓存删除，并加进二级缓存
+	 * 				如果有：直接返回
+	 * 				如果没有，并且这个bean没有在创建中：返回null
+	 * <br>
+	 *
 	 * 通过三级缓存解决以来循环问题
 	 *
 	 * Return the (raw) singleton object registered under the given name.
@@ -186,15 +194,15 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		Object singletonObject = this.singletonObjects.get(beanName);
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) { //如果单例池里面有，并且这个bean正在创建
 			synchronized (this.singletonObjects) {
-				// 从早期暴露的bean列表里面取
+				// 从二级缓存取，有的话返回 【二级缓存就是早期暴露的还没完全注入的bean】
 				singletonObject = this.earlySingletonObjects.get(beanName);
 				if (singletonObject == null && allowEarlyReference) { // 如果没有被创建，并且需要创建
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) { //从singletonFactories取出创建bean的方法调用
-						singletonObject = singletonFactory.getObject();
-						// 正在创建早期暴露 这个singletonObject
+						singletonObject = singletonFactory.getObject();//从三级缓存中取出bean的创建方法，调用创建bean
+						// 创建完成后加进二级缓存
 						this.earlySingletonObjects.put(beanName, singletonObject);
-						// 删除创建方法
+						// 从三级缓存删除
 						this.singletonFactories.remove(beanName);
 					}
 				}
