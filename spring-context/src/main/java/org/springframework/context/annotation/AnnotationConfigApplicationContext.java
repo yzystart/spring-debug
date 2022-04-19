@@ -84,10 +84,11 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * {@link Configuration @Configuration} classes
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
+		// 在构造器中注册了 ConfigurationClassPostProcessor、CommonAnnotationBeanPostProcessor、AutowiredAnnotationBeanPostProcessor
 		this();
 		// 这里只是将配置类的beanDefinition扫描进beanDefinitionMap,还没有生成bean实例
 		register(componentClasses);
-		//
+		// 实例化bean了
 		refresh();
 	}
 

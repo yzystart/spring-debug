@@ -101,7 +101,7 @@ final class PostProcessorRegistrationDelegate {
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
 			// 这里应该是先执行 Spring 自带的 BeanDefinitionRegistryPostProcessor的postProcessBeanDefinitionRegistry()方法
-			// 从META-INFO/spring.factories文件里面读取
+			// 从META-INFO/spring.factories文件里面读取 配置类
 			// 执行 postProcessBeanDefinitionRegistry 的 postProcessBeanDefinitionRegistry 方法用于扫描Configuration类
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			currentRegistryProcessors.clear();
