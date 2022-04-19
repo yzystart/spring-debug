@@ -22,7 +22,7 @@ public class StudyMain implements PointcutAdvisor {
 	public static class MyInstantiationAwareBeanPostProcessor implements InstantiationAwareBeanPostProcessor {
 
 		public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
-			return new ServiceAImpl();
+			return null;
 		}
 	}
 

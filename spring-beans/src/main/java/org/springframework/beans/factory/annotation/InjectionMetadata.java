@@ -206,13 +206,13 @@ public class InjectionMetadata {
 		}
 
 		protected final Class<?> getResourceType() {
-			if (this.isField) {
+			if (this.isField) { //  如果是属性，返回属性的类型
 				return ((Field) this.member).getType();
 			}
 			else if (this.pd != null) {
 				return this.pd.getPropertyType();
 			}
-			else {
+			else { //其他 返回方法的第一个参数
 				return ((Method) this.member).getParameterTypes()[0];
 			}
 		}

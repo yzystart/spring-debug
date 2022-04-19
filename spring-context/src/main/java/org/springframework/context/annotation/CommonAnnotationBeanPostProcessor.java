@@ -548,13 +548,16 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 			AutowireCapableBeanFactory beanFactory = (AutowireCapableBeanFactory) factory;
 			DependencyDescriptor descriptor = element.getDependencyDescriptor();
 			if (this.fallbackToDefaultTypeMatch && element.isDefaultName && !factory.containsBean(name)) {
+				//!factory.containsBean(name) : 根据name判断工厂里有没有这个bean ，没有才会走这里面的逻辑
 				autowiredBeanNames = new LinkedHashSet<>();
+				// 这是@Autowired的方法 byType 再 byName
 				resource = beanFactory.resolveDependency(descriptor, requestingBeanName, autowiredBeanNames, null);
 				if (resource == null) {
 					throw new NoSuchBeanDefinitionException(element.getLookupType(), "No resolvable resource object");
 				}
 			}
 			else {
+				// 如果有factory.containsBean(name) ，就 byName去容器拿 最终调用 getBean()
 				resource = beanFactory.resolveBeanByName(name, descriptor);
 				autowiredBeanNames = Collections.singleton(name);
 			}
@@ -636,12 +639,14 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 		public ResourceElement(Member member, AnnotatedElement ae, @Nullable PropertyDescriptor pd) {
 			super(member, pd);
 			Resource resource = ae.getAnnotation(Resource.class);
-			String resourceName = resource.name();
-			Class<?> resourceType = resource.type();
-			this.isDefaultName = !StringUtils.hasLength(resourceName);
-			if (this.isDefaultName) {
-				resourceName = this.member.getName();
+			String resourceName = resource.name(); //得到 name
+			Class<?> resourceType = resource.type(); //得到 type
+			this.isDefaultName = !StringUtils.hasLength(resourceName);//没有指定resourceName就用默认名称
+			if (this.isDefaultName) {// 如果没有name
+				resourceName = this.member.getName(); //取到加了这个注解的元素名：方法名？字段名
+				// 如果是加在set方法上面
 				if (this.member instanceof Method && resourceName.startsWith("set") && resourceName.length() > 3) {
+					// 截取set后面的名称作为resourceName
 					resourceName = Introspector.decapitalize(resourceName.substring(3));
 				}
 			}
@@ -652,7 +657,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 				checkResourceType(resourceType);
 			}
 			else {
-				// No resource type specified... check field/method.
+				// No resource type specified... check field/method. 【得到需要的类型type】
 				resourceType = getResourceType();
 			}
 			this.name = (resourceName != null ? resourceName : "");
