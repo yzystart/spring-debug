@@ -205,6 +205,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 
 
 	/**
+	 * @PostConstruct、@PreDestroy
 	 * Create a new CommonAnnotationBeanPostProcessor,
 	 * with the init and destroy annotation types set to
 	 * {@link javax.annotation.PostConstruct} and {@link javax.annotation.PreDestroy},
@@ -308,7 +309,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
 		super.postProcessMergedBeanDefinition(beanDefinition, beanType, beanName);
-		InjectionMetadata metadata = findResourceMetadata(beanName, beanType, null); //解析@Resource在这部
+		InjectionMetadata metadata = findResourceMetadata(beanName, beanType, null); //解析@Resource在这步
 		System.out.println();
 		System.out.println();
 		System.out.println("【"+beanType.getName()+"调用了CommonAnnotationBeanPostProcessor::postProcessMergedBeanDefinition"+"】");

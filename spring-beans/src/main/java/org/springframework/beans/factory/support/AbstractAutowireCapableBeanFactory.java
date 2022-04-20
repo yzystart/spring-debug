@@ -570,7 +570,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Allow post-processors to modify the merged bean definition.
 		synchronized (mbd.postProcessingLock) {
 			if (!mbd.postProcessed) {
-				try { // 解析注解 @Resource @Autowired @Value
+				try { // 解析注解 @Resource @Autowired @Value @PostConstruct @PreDestroy
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}
 				catch (Throwable ex) {
@@ -1804,7 +1804,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
 			// 调用所有beanPostPorcessor::postProcessBeforeInitialization方法
-			//@PostConstruct 在这一步执行，调用InitDestroyAnnotationBeanPostProcessor::postProcessBeforeInitialization
+			//@PostConstruct 在这一步执行，调用 CommonAnnotationBeanPostProcessor 调用父类 InitDestroyAnnotationBeanPostProcessor::postProcessBeforeInitialization
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 

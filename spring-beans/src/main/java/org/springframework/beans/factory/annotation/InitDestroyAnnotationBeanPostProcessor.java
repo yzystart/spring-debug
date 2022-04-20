@@ -101,10 +101,10 @@ public class InitDestroyAnnotationBeanPostProcessor
 	protected transient Log logger = LogFactory.getLog(getClass());
 
 	@Nullable
-	private Class<? extends Annotation> initAnnotationType;
+	private Class<? extends Annotation> initAnnotationType; //@PostConstruct,由子类设置
 
 	@Nullable
-	private Class<? extends Annotation> destroyAnnotationType;
+	private Class<? extends Annotation> destroyAnnotationType;// @PreDestroy ,由子类设置
 
 	private int order = Ordered.LOWEST_PRECEDENCE;
 
@@ -153,7 +153,7 @@ public class InitDestroyAnnotationBeanPostProcessor
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		LifecycleMetadata metadata = findLifecycleMetadata(bean.getClass());
-		try { //
+		try { //执行@PostConstruct方法
 			metadata.invokeInitMethods(bean, beanName);
 		}
 		catch (InvocationTargetException ex) {
@@ -216,6 +216,11 @@ public class InitDestroyAnnotationBeanPostProcessor
 		return metadata;
 	}
 
+	/**
+	 * 解析 @PreDestroy 和 @PostConstruct
+	 * @param clazz
+	 * @return
+	 */
 	private LifecycleMetadata buildLifecycleMetadata(final Class<?> clazz) {
 		if (!AnnotationUtils.isCandidateClass(clazz, Arrays.asList(this.initAnnotationType, this.destroyAnnotationType))) {
 			return this.emptyLifecycleMetadata;
@@ -232,19 +237,21 @@ public class InitDestroyAnnotationBeanPostProcessor
 			ReflectionUtils.doWithLocalMethods(targetClass, method -> {
 				if (this.initAnnotationType != null && method.isAnnotationPresent(this.initAnnotationType)) {
 					LifecycleElement element = new LifecycleElement(method);
+					// 找到加了PostConstruct注解的方法 加进currInitMethods
 					currInitMethods.add(element);
 					if (logger.isTraceEnabled()) {
 						logger.trace("Found init method on class [" + clazz.getName() + "]: " + method);
 					}
 				}
 				if (this.destroyAnnotationType != null && method.isAnnotationPresent(this.destroyAnnotationType)) {
+					// 找到加了@PreDestroy注解的方法 加进currDestroyMethods
 					currDestroyMethods.add(new LifecycleElement(method));
 					if (logger.isTraceEnabled()) {
 						logger.trace("Found destroy method on class [" + clazz.getName() + "]: " + method);
 					}
 				}
 			});
-
+			// 所有初始化方法 @PostConstruct
 			initMethods.addAll(0, currInitMethods);
 			destroyMethods.addAll(currDestroyMethods);
 			targetClass = targetClass.getSuperclass();

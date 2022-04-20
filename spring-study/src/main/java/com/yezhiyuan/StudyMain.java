@@ -1,5 +1,6 @@
 package com.yezhiyuan;
 
+import com.yezhiyuan.bean.MyBean;
 import com.yezhiyuan.imports.MyImportBean;
 import com.yezhiyuan.service.impl.ServiceAImpl;
 import com.yezhiyuan.support.MyBeanPostProcessor;
@@ -19,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Import(MyImportBean.class)
 @Component
 @EnableTransactionManagement
-@ComponentScan("com.yezhiyuan.service.impl")
+@ComponentScan({"com.yezhiyuan.service.impl","com.yezhiyuan.bean"})
 public class StudyMain implements PointcutAdvisor {
 	public static class MyInstantiationAwareBeanPostProcessor implements InstantiationAwareBeanPostProcessor {
 
@@ -34,15 +35,9 @@ public class StudyMain implements PointcutAdvisor {
 	}
 
 
-	public static void main(String[] args) throws InterruptedException {
-//		ThreadLocal<String>l=new ThreadLocal<>();
-////		l.set("测试！");
-//		System.out.println("造");
-//		System.gc();
-//		Thread.sleep(1000L);
-//		System.out.println(l.get());
+	public static void main(String[] args) {
 		AnnotationConfigApplicationContext applicationContext=new AnnotationConfigApplicationContext(StudyMain.class);
-		MyBeanPostProcessor bean = applicationContext.getBean(MyBeanPostProcessor.class);
+		MyBean bean = applicationContext.getBean(MyBean.class);
 		System.out.println(bean);
 	}
 

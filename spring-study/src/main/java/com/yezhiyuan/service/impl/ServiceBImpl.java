@@ -23,4 +23,9 @@ public class ServiceBImpl implements ServiceB {
 	public void testPostConstruct(){
 		System.out.println("testPostConstruct执行了");
 	}
+
+	@PostConstruct
+	public void testPostConstruct2(){
+		System.out.println("testPostConstruct2执行了");
+	}
 }
