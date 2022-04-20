@@ -120,7 +120,7 @@ public class InjectionMetadata {
 
 
 	/**
-	 *  处理 @Resource 注入
+	 *  处理 依赖 注入
 	 * @param target
 	 * @param beanName
 	 * @param pvs

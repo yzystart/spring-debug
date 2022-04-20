@@ -14,9 +14,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Import(MyImportBean.class)
 @Component
+@EnableTransactionManagement
 @ComponentScan("com.yezhiyuan.service.impl")
 public class StudyMain implements PointcutAdvisor {
 	public static class MyInstantiationAwareBeanPostProcessor implements InstantiationAwareBeanPostProcessor {

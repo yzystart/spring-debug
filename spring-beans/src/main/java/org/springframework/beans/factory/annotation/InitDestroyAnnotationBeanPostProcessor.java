@@ -153,7 +153,7 @@ public class InitDestroyAnnotationBeanPostProcessor
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		LifecycleMetadata metadata = findLifecycleMetadata(bean.getClass());
-		try {
+		try { //
 			metadata.invokeInitMethods(bean, beanName);
 		}
 		catch (InvocationTargetException ex) {
@@ -385,7 +385,7 @@ public class InitDestroyAnnotationBeanPostProcessor
 		}
 
 		public void invoke(Object target) throws Throwable {
-			ReflectionUtils.makeAccessible(this.method);
+			ReflectionUtils.makeAccessible(this.method); // 将方法设为可访问的
 			this.method.invoke(target, (Object[]) null);
 		}
 

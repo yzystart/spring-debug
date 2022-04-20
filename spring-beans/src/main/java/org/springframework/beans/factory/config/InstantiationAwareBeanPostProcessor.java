@@ -47,6 +47,8 @@ import org.springframework.lang.Nullable;
 public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 
 	/**
+	 *  在doCreateBean() 之前调用，也就是bean实例化之前，使有机会返回一个代理，BeanPostProcessor的第一次调用
+	 * <br>
 	 * Apply this BeanPostProcessor <i>before the target bean gets instantiated</i>.
 	 * The returned bean object may be a proxy to use instead of the target bean,
 	 * effectively suppressing default instantiation of the target bean.

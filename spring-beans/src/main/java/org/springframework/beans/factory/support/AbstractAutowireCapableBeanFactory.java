@@ -590,7 +590,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				logger.trace("Eagerly caching bean '" + beanName +
 						"' to allow for resolving potential circular references");
 			}
-			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean)); // 把这个方法加进三级缓存
+			// 把这个方法加进三级缓存，！用于解决依赖循环创建代理！
+			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
 
 		// Initialize the bean instance.
@@ -1793,15 +1794,23 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}, getAccessControlContext());
 		}
 		else {
+			// 如果bean实现了一些Aware接口，调用执行这些接口的方法
+			// BeanNameAware::setBeanName
+			// BeanClassLoaderAware::setBeanClassLoader
+			// BeanFactoryAware::setBeanFactory
 			invokeAwareMethods(beanName, bean);
 		}
 
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
+			// 调用所有beanPostPorcessor::postProcessBeforeInitialization方法
+			//@PostConstruct 在这一步执行，调用InitDestroyAnnotationBeanPostProcessor::postProcessBeforeInitialization
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
 		try {
+			// 这里开始调用bean的init方法
+			// 如果bean实现了 InitializingBean 接口，调用InitializingBean::afterPropertiesSet
 			invokeInitMethods(beanName, wrappedBean, mbd);
 		}
 		catch (Throwable ex) {
@@ -1810,6 +1819,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					beanName, "Invocation of init method failed", ex);
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
+			//调用所有BeanPostProcessor::postProcessAfterInitialization
+			// AOP代理对象在这一步产生AbstractAutoProxyCreator::postProcessAfterInitialization (如果创建过就不会再创建)
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 
