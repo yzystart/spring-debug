@@ -3,7 +3,7 @@ package com.yezhiyuan.bean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class MyFactoryBean implements FactoryBean<MyBean> {
 
 	@Override

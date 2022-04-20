@@ -2,8 +2,9 @@ package com.yezhiyuan.bean;
 
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class MyBean {
 
 

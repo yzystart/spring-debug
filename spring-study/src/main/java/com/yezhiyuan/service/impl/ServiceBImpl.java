@@ -8,16 +8,20 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
-@Transactional
+//@Transactional
 @Service
 public class ServiceBImpl implements ServiceB {
 
 	@Resource
-	ServiceA serviceA;
+	public ServiceA serviceA;
 
 
-	@Transactional
-	public void testTransactionalProxy(){}
+	@Transactional(rollbackFor = NullPointerException.class)
+	public void testTransactionalProxy(){
+		System.out.println(".........");
+		serviceA.doSomething();
+//		throw new NullPointerException();
+	}
 
 	@PostConstruct
 	public void testPostConstruct(){

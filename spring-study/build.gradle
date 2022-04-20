@@ -15,6 +15,7 @@ dependencies {
     compile(project(":spring-core"))
     compile(project(":spring-aop"))
     compile(project(":spring-tx"))
+    compile(project(":spring-jdbc"))
 
     compile("org.aspectj:aspectjweaver")
 

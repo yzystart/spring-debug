@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Service
-@Aspect
 public class ServiceAImpl implements ServiceA {
 
 
@@ -22,4 +21,8 @@ public class ServiceAImpl implements ServiceA {
 
 	}
 
+	@Override
+	public void doSomething() {
+		System.out.println("service A doSomething");
+	}
 }
