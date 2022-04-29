@@ -85,7 +85,8 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 		// 在构造器中注册了 ConfigurationClassPostProcessor、CommonAnnotationBeanPostProcessor、AutowiredAnnotationBeanPostProcessor
-		this();
+		// 初始化了 reader 和 scanner
+		this(); //在这之前会先调用父类GenericApplicationContext的构造方法，创建一个beanFactory
 		// 这里只是将配置类的beanDefinition扫描进beanDefinitionMap,还没有生成bean实例
 		register(componentClasses);
 		// 实例化bean了

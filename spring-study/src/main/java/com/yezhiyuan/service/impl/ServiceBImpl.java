@@ -20,7 +20,7 @@ public class ServiceBImpl implements ServiceB {
 	public void testTransactionalProxy(){
 		System.out.println(".........");
 		serviceA.doSomething();
-//		throw new NullPointerException();
+		throw new IllegalArgumentException("！炮出了异常！");
 	}
 
 	@PostConstruct

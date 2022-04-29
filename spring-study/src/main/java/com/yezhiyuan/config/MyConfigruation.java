@@ -78,13 +78,65 @@ public class MyConfigruation {
 		}
 	}
 
+	class MyTransactionStatus implements TransactionStatus{
+		TransactionDefinition definition;
+		public MyTransactionStatus(TransactionDefinition definition) {
+			this.definition=definition;
+		}
+
+		@Override
+		public Object createSavepoint() throws TransactionException {
+			return new Object();
+		}
+
+		@Override
+		public void rollbackToSavepoint(Object savepoint) throws TransactionException {
+			System.out.println("执行了 rollbackToSavepoint"+savepoint);
+		}
+
+		@Override
+		public void releaseSavepoint(Object savepoint) throws TransactionException {
+			System.out.println("执行了 releaseSavepoint"+savepoint);
+		}
+
+		@Override
+		public boolean isNewTransaction() {
+			return false;
+		}
+
+		@Override
+		public void setRollbackOnly() {
+
+		}
+
+		@Override
+		public boolean isRollbackOnly() {
+			return definition.isReadOnly();
+		}
+
+		@Override
+		public boolean isCompleted() {
+			return false;
+		}
+
+		@Override
+		public boolean hasSavepoint() {
+			return false;
+		}
+
+		@Override
+		public void flush() {
+
+		}
+	}
+
 
 	class MyTransactionManager implements PlatformTransactionManager {
 
 
 		@Override
 		public TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException {
-			return null;
+			return new MyTransactionStatus(definition);
 		}
 
 		@Override
@@ -94,7 +146,8 @@ public class MyConfigruation {
 
 		@Override
 		public void rollback(TransactionStatus status) throws TransactionException {
-
+			System.out.println("status\n"+status);
+			System.out.println("执行了rollback");
 		}
 	}
 }
