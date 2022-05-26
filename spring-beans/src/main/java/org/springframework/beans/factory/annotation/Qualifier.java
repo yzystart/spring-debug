@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * This annotation may be used on a field or parameter as a qualifier for
  * candidate beans when autowiring. It may also be used to annotate other
  * custom annotations that can then in turn be used as qualifiers.
- *
+ * 可以与  @Autowired 搭配用
  * @author Mark Fisher
  * @author Juergen Hoeller
  * @since 2.5
