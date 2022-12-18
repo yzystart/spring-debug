@@ -23,7 +23,8 @@ public class StudyMain{
 		AnnotationConfigApplicationContext applicationContext=new AnnotationConfigApplicationContext(StudyMain.class);
 		ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
 		System.out.println();
-//		ServiceBImpl serviceBImpl = beanFactory.getBean("serviceBImpl", ServiceBImpl.class);
+		ServiceBImpl serviceBImpl = beanFactory.getBean("serviceBImpl", ServiceBImpl.class);
+		System.out.println(serviceBImpl);
 //		System.out.println(serviceBImpl.serviceA);
 //		serviceBImpl.testTransactionalProxy();
 //		System.out.println("end");
