@@ -20,6 +20,7 @@ public class StudyMain{
 
 
 	public static void main(String[] args) {
+		System.out.println(AnnotationConfigApplicationContext.CLASSPATH_URL_PREFIX);
 		AnnotationConfigApplicationContext applicationContext=new AnnotationConfigApplicationContext(StudyMain.class);
 		ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
 		System.out.println();
