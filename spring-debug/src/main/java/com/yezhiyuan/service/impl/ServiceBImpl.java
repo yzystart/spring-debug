@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
-@Transactional
-@Service
+//@Transactional
+//@Service
 public class ServiceBImpl implements ServiceB {
 
 	@Resource
