@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 //@Transactional
-//@Service
+@Service
 public class ServiceBImpl implements ServiceB {
 
 	@Resource

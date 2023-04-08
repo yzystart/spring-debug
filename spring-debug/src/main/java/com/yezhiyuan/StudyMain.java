@@ -2,6 +2,7 @@ package com.yezhiyuan;
 
 import com.yezhiyuan.aoptest.TestAopService;
 import com.yezhiyuan.imports.MyImportBean;
+import com.yezhiyuan.service.ServiceA;
 import com.yezhiyuan.service.impl.ServiceBImpl;
 import org.springframework.aop.framework.AdvisedSupport;
 import org.springframework.aop.framework.CglibAopProxy;
@@ -27,14 +28,16 @@ public class StudyMain{
 
 
 	public static void main(String[] args) {
-//		AnnotationConfigApplicationContext applicationContext=new AnnotationConfigApplicationContext(StudyMain.class);
-//		ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
+		AnnotationConfigApplicationContext applicationContext=new AnnotationConfigApplicationContext(StudyMain.class);
+		ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
+		ServiceA bean = beanFactory.getBean(ServiceA.class);
+		bean.doSomething();
 //		System.out.println();
 //		TestAopService t = beanFactory.getBean(TestAopService.class);
-		AdvisedSupport advisedSupport = new AdvisedSupport();
-		advisedSupport.setTarget(new TestAopService());
-		CglibAopProxy cglibAopProxy = new CglibAopProxy(advisedSupport);
-		Object proxy = cglibAopProxy.getProxy();
+//		AdvisedSupport advisedSupport = new AdvisedSupport();
+//		advisedSupport.setTarget(new TestAopService());
+//		CglibAopProxy cglibAopProxy = new CglibAopProxy(advisedSupport);
+//		Object proxy = cglibAopProxy.getProxy();
 //		t.doSomething();
 //		System.out.println(serviceBImpl.serviceA);
 //		serviceBImpl.testTransactionalProxy();
