@@ -32,6 +32,7 @@ public class StudyMain{
 		ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
 		ServiceA bean = beanFactory.getBean(ServiceA.class);
 		bean.doSomething();
+		bean.doSomething2();
 //		System.out.println();
 //		TestAopService t = beanFactory.getBean(TestAopService.class);
 //		AdvisedSupport advisedSupport = new AdvisedSupport();

@@ -1,6 +1,7 @@
 package com.yezhiyuan.config;
 
 
+import com.yezhiyuan.tx.DynamicDataSource;
 import com.yezhiyuan.tx.MyDataSource;
 import com.yezhiyuan.tx.MyTransactionManager;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,15 +25,34 @@ public class MyConfigruation {
 
 
 
-	@Qualifier("myDataSource")
+	@Qualifier("dynamicDataSource")
 	@Bean
-	public TransactionManager dataSourceTransactionManager(DataSource datasource){
-		return new DataSourceTransactionManager(datasource);
+	public TransactionManager dataSourceTransactionManager(DataSource dynamicDataSource){
+		return new DataSourceTransactionManager(dynamicDataSource);
 	}
 
-	@Bean("myDataSource")
-	public DataSource myDataSource(){
-		return new MyDataSource();
+
+	@Bean("dynamicDataSource")
+	public DataSource dynamicDataSource(){
+		return new DynamicDataSource();
 	}
+
+//	@Bean("myDataSource")
+//	public DataSource myDataSource(){
+//		return new MyDataSource("jdbc:mysql://124.221.220.128/mybatis-debug","root","y2yhsamysql");
+//	}
+
+	@Bean("db2")
+	public DataSource db2(){
+		MyDataSource myDataSource = new MyDataSource("jdbc:mysql://124.221.220.128/db2", "root", "y2yhsamysql");
+		DataSourceHolder.datasourceMap.put("db2",myDataSource);
+		return myDataSource;
+	}
+
+	@Bean("db1")
+	public DataSource db1(){
+		MyDataSource myDataSource = new MyDataSource("jdbc:mysql://124.221.220.128/db1", "root", "y2yhsamysql");
+		DataSourceHolder.datasourceMap.put("db1",myDataSource);
+		return myDataSource;}
 
 }
