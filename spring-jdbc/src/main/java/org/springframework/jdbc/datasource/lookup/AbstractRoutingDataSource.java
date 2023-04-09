@@ -33,6 +33,8 @@ import org.springframework.util.Assert;
  * calls to one of various target DataSources based on a lookup key. The latter is usually
  * (but not necessarily) determined through some thread-bound transaction context.
  *
+ * 多数据源可以直接继承这个类。
+ *
  * @author Juergen Hoeller
  * @since 2.0.1
  * @see #setTargetDataSources
