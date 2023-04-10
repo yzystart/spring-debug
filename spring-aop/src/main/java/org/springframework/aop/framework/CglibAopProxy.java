@@ -656,14 +656,14 @@ class CglibAopProxy implements AopProxy, Serializable {
 		public DynamicAdvisedInterceptor(AdvisedSupport advised) {
 			this.advised = advised;
 		}
-
+		// AOP代理方法都会走这里
 		@Override
 		@Nullable
 		public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
 			Object oldProxy = null;
 			boolean setProxyContext = false;
 			Object target = null;
-			TargetSource targetSource = this.advised.getTargetSource();
+			TargetSource targetSource = this.advised.getTargetSource();//被代理的对象
 			try {
 				if (this.advised.exposeProxy) {
 					// Make invocation available if necessary.
@@ -671,9 +671,9 @@ class CglibAopProxy implements AopProxy, Serializable {
 					setProxyContext = true;
 				}
 				// Get as late as possible to minimize the time we "own" the target, in case it comes from a pool...
-				target = targetSource.getTarget();
+				target = targetSource.getTarget(); //原始被代理的对象
 				Class<?> targetClass = (target != null ? target.getClass() : null);
-				List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
+				List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);//拦截器执行链
 				Object retVal;
 				// Check whether we only have one InvokerInterceptor: that is,
 				// no real advice, but just reflective invocation of the target.
@@ -682,11 +682,13 @@ class CglibAopProxy implements AopProxy, Serializable {
 					// Note that the final invoker must be an InvokerInterceptor, so we know
 					// it does nothing but a reflective operation on the target, and no hot
 					// swapping or fancy proxying.
+					// 如果没有切面，直接执行目标方法。
 					Object[] argsToUse = AopProxyUtils.adaptArgumentsIfNecessary(method, args);
 					retVal = methodProxy.invoke(target, argsToUse);
 				}
 				else {
 					// We need to create a method invocation...
+					// 包装成链执行  a->b->c这样
 					retVal = new CglibMethodInvocation(proxy, target, method, args, targetClass, chain, methodProxy).proceed();
 				}
 				retVal = processReturnType(proxy, target, method, retVal);
