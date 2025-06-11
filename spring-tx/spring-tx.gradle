@@ -1,7 +1,16 @@
 description = "Spring Transaction"
 
 apply plugin: "kotlin"
-
+repositories {
+	mavenCentral()
+	// 添加 IBM 官方仓库（优先级最高）
+	maven { url "https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/maven/repository/" }
+	// 可选：添加阿里云仓库（备用）
+	maven { url "https://maven.aliyun.com/repository/public" }
+	// Spring 官方仓库（公开部分）
+	maven { url "https://repo.spring.io/release" }
+	maven { url "https://maven.aliyun.com/repository/spring"}
+}
 dependencies {
 	compile(project(":spring-beans"))
 	compile(project(":spring-core"))
@@ -27,3 +36,4 @@ dependencies {
 	testCompile("org.eclipse.persistence:javax.persistence")
 	testCompile("io.projectreactor:reactor-test")
 }
+

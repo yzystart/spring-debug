@@ -1,4 +1,5 @@
 plugins {
+	id "com.jfrog.artifactory" version "4.29.3" apply false
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE' apply false
 	id 'org.jetbrains.kotlin.jvm' version '1.3.61' apply false
 	id 'org.jetbrains.dokka' version '0.9.18' apply false
@@ -7,11 +8,22 @@ plugins {
 	id 'io.spring.nohttp' version '0.0.4.RELEASE'
 	id 'de.undercouch.download' version '4.0.0'
 	id 'com.gradle.build-scan' version '3.1.1'
-	id "com.jfrog.artifactory" version '4.12.0' apply false
+//	id "com.jfrog.artifactory" version '4.12.0' apply false
 	id "io.freefair.aspectj" version "4.1.1" apply false
 	id "com.github.ben-manes.versions" version "0.24.0"
 }
-
+allprojects {
+	repositories {
+		mavenCentral()
+		// 添加 IBM 官方仓库（优先级最高）
+		maven { url "https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/maven/repository/" }
+		// 可选：添加阿里云仓库（备用）
+		maven { url "https://maven.aliyun.com/repository/public" }
+		// Spring 官方仓库（公开部分）
+		maven { url "https://repo.spring.io/release" }
+		maven { url "https://maven.aliyun.com/repository/spring"}
+	}
+}
 apply from: "$rootDir/gradle/build-scan-user-data.gradle"
 ext {
 	moduleProjects = subprojects.findAll { it.name.startsWith("spring-") }
@@ -280,12 +292,20 @@ configure(allprojects) { project ->
 		}
 		repositories {
 			mavenCentral()
-			maven { url "https://repo.spring.io/libs-spring-framework-build" }
-			maven { url "https://repo.spring.io/libs-spring-framework-build" }
-			maven { url "https://repo.spring.io/milestone" }
-			maven { url "https://repo.spring.io/plugins-release" }
-			maven { url "https://maven.aliyun.com/nexus/content/groups/public" }
-			maven { url "https://maven.aliyun.com/nexus/content/repositories/jcenter" }
+			// 添加 IBM 官方仓库（优先级最高）
+			maven { url "https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/maven/repository/" }
+			// 可选：添加阿里云仓库（备用）
+			maven { url "https://maven.aliyun.com/repository/public" }
+			// Spring 官方仓库（公开部分）
+			maven { url "https://repo.spring.io/release" }
+			// 添加以下仓库
+			maven {
+				url "https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/maven/repository/"
+			}
+			maven { url "https://repo.spring.io/release" }  // Spring 公开仓库
+			maven { url "https://plugins.gradle.org/m2/" }
+			maven { url "https://repo.spring.io/plugins-release/" }
+			maven { url "https://repo.jfrog.org/artifactory/libs-release" }  // JFrog 官方仓库
 		}
 	}
 	configurations.all {
